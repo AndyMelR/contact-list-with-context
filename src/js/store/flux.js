@@ -1,5 +1,3 @@
-import John from '../../img/foto_contacto_1-modified.png'
-import Jane from '../../img/foto_Jane.png'
 
 const getState = ({ getStore, setStore, getActions }) => {
 	return {
@@ -22,8 +20,8 @@ const getState = ({ getStore, setStore, getActions }) => {
     },
 			addContact: user => {
 				fetch("https://assets.breatheco.de/apis/fake/contact/", {
-					method: "POST", // or 'POST'
-					body: JSON.stringify(user), // data can be `string` or {object}!
+					method: "POST", 
+					body: JSON.stringify(user), 
 					headers: {
 						"Content-Type": "application/json"
 					}
