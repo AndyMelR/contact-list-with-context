@@ -1,0 +1,11 @@
+.dropzone {
+    border: 2px dashed #666;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .dropzone img {
+    max-width: 100%;
+    max-height: 200px;
+  }

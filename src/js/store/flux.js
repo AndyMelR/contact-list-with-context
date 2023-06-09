@@ -1,42 +1,62 @@
-const getState = ({ getStore, getActions, setStore }) => {
+import John from '../../img/foto_contacto_1-modified.png'
+import Jane from '../../img/foto_Jane.png'
+
+const getState = ({ getStore, setStore, getActions }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			contactList: [],
+			idDelete: "",
+			contactToEdit: {}
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getData: async() => {
+        try {const response = await fetch("https://assets.breatheco.de/apis/fake/contact/agenda/agenda_andrea");
+        const data = await response.json();
+        setStore ({contactList : data})
+        return data;
+      }
+      catch (error) {
+        console.log("Error loading products from backend", error);
+				
+			}
+    },
+			addContact: user => {
+				fetch("https://assets.breatheco.de/apis/fake/contact/", {
+					method: "POST", // or 'POST'
+					body: JSON.stringify(user), // data can be `string` or {object}!
+					headers: {
+						"Content-Type": "application/json"
+					}
+				})
+					.then(res => res.json())
+					.then(response => console.log("Success:", response))
+					.catch(error => console.error("Error:", error));
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			addidDelete: id => {
+				setStore({ idDelete: id });
 			},
-			changeColor: (index, color) => {
-				//get the store
+			removeContact: () => {
 				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+				fetch("https://assets.breatheco.de/apis/fake/contact/" + store.idDelete, {
+					method: "DELETE"
+				}).then(res => {
+					if (res.ok) {
+						getActions().getData();
+					}
 				});
-
-				//reset the global store
-				setStore({ demo: demo });
+			},
+			editContact: (id, contact) => {
+				fetch("https://assets.breatheco.de/apis/fake/contact/" + id, {
+					method: "PUT",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(contact)
+				})
+					.then(res => res.json())
+					.then(results => console.log(setStore({ contact: results }), "estoy en setStore"))
+					.catch(error => console.log("Error", error));
+			},
+			getContact: contact => {
+				setStore({ contactToEdit: contact });
 			}
 		}
 	};
